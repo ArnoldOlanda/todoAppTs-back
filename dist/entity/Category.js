@@ -9,44 +9,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Category = void 0;
 const typeorm_1 = require("typeorm");
 const Todo_1 = require("./Todo");
-let User = class User extends typeorm_1.BaseEntity {
+let Category = class Category extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], User.prototype, "id", void 0);
+], Category.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "name", void 0);
+], Category.prototype, "category", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], User.prototype, "user", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], User.prototype, "notifToken", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => Todo_1.Todo, (todo) => todo.user),
+    (0, typeorm_1.OneToMany)(() => Todo_1.Todo, (todo) => todo.category),
     __metadata("design:type", Array)
-], User.prototype, "todos", void 0);
+], Category.prototype, "todos", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
-], User.prototype, "createdAt", void 0);
+], Category.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)(),
     __metadata("design:type", Date)
-], User.prototype, "updatedAt", void 0);
-User = __decorate([
+], Category.prototype, "updatedAt", void 0);
+Category = __decorate([
     (0, typeorm_1.Entity)()
-], User);
-exports.User = User;
+], Category);
+exports.Category = Category;

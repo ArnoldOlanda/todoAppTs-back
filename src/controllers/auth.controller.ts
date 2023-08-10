@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
-import bcrypt from "bcryptjs";
-import { User } from "../entity";
 import { generateJWT } from "../helpers/generateJWT";
 import { UserService } from "../services/user.service";
 import { ValidationError } from "../errors/ValidationError";
+
+declare module "express-serve-static-core" {
+    interface Request {
+        id: string;
+        user: string;
+    }
+}
 
 const userService = new UserService();
 
@@ -34,11 +39,16 @@ export const postRegister = async (req: Request, res: Response) => {
     const { name, user, password } = req.body;
 
     try {
-        const newUser = await userService.register(name, user, password);
+        const { user: newUser, token } = await userService.register(
+            name,
+            user,
+            password
+        );
 
         return res.json({
             ok: true,
             user: newUser,
+            token,
         });
     } catch (error) {
         console.log(error);
@@ -49,7 +59,6 @@ export const postRegister = async (req: Request, res: Response) => {
 };
 
 export const getRevalidateToken = async (req: Request, res: Response) => {
-    //@ts-ignore
     const { id, user } = req;
 
     const token = await generateJWT(id, user);

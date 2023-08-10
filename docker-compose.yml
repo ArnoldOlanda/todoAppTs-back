@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+    api:
+        container_name: api
+        restart: always
+        build: .
+        ports:
+            - ${PORT}:${PORT}
+        depends_on:
+            - db
+        volumes:
+            - .:/app
+
+    db:
+        container_name: postgres
+        image: postgres
+        ports:
+            - 54321:${DB_PORT}
+        volumes:
+            #- ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+            - data:/data/db
+        environment:
+            POSTGRES_DB: ${DB_NAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+volumes:
+    data: {}

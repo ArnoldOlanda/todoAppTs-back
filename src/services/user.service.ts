@@ -32,7 +32,7 @@ export class UserService {
         name: string,
         user: string,
         password: string
-    ): Promise<User> {
+    ): Promise<{ token: unknown; user: User }> {
         try {
             const salt = bcrypt.genSaltSync(10);
             const encryptedPassword = bcrypt.hashSync(password, salt);
@@ -43,7 +43,20 @@ export class UserService {
             newUser.password = encryptedPassword;
 
             await newUser.save();
-            return newUser;
+            const token = await generateJWT(
+                newUser.id.toString(),
+                newUser.user
+            );
+            return { user: newUser, token };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async searchById(id: string) {
+        try {
+            const user = await User.findOneBy({ id: parseInt(id) });
+            return user;
         } catch (error) {
             throw error;
         }

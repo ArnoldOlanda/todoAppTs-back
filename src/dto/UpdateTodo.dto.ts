@@ -1,7 +1,6 @@
-export interface TodoEntity {
+export class UpdateTodoDto {
     title: string;
     description: string;
     date: Date;
-    idUser: number;
     idCategory: number;
 }

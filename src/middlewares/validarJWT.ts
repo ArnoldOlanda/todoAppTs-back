@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { User } from "../entity/User";
+import { UserService } from "../services/user.service";
 
 interface JwtPayload {
     id: string;
@@ -13,9 +13,7 @@ declare module "express-serve-static-core" {
     }
 }
 
-// interface IGetUserAuthInfo extends Request {
-//   autenthicatedUser: object; // or any other type
-// }
+const userService = new UserService();
 
 export const validarJWT = async (
     req: Request,
@@ -35,12 +33,12 @@ export const validarJWT = async (
             process.env.SECRETORPRIVATEKEY as string
         ) as JwtPayload;
 
-        const usuario = await User.findOneBy({ id: parseInt(id) });
+        const usuario = await userService.searchById(id);
 
         //Validar que el usuario exista en la base de datos
         if (!usuario) {
             return res.status(401).json({
-                msg: "Token no valido - usuario eliminado de la BD",
+                msg: "Token no valido",
             });
         }
 

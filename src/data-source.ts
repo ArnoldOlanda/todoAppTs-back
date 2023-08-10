@@ -5,15 +5,15 @@ import { Category } from "./entity/Category";
 import { Todo } from "./entity/Todo";
 
 export const AppDataSource = new DataSource({
-  type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "postgres",
-  password: "admin",
-  database: "todos",
-  synchronize: true,
-  logging: false,
-  entities: [User, Category, Todo],
-  migrations: [],
-  subscribers: [],
+    type: "postgres",
+    port: parseInt(`${process.env.DB_PORT}`) || 5432,
+    username: `${process.env.DB_USER}`,
+    host: `${process.env.DB_HOST}`,
+    database: `${process.env.DB_NAME}`,
+    password: `${process.env.DB_PASSWORD}`,
+    synchronize: true,
+    logging: false,
+    entities: [User, Category, Todo],
+    migrations: [],
+    subscribers: [],
 });

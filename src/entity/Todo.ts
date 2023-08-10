@@ -1,41 +1,41 @@
 import {
-  BaseEntity,
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from "typeorm";
 import { Category } from "./Category";
 import { User } from "./User";
 
 @Entity()
 export class Todo extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column()
-  title: string;
+    @Column()
+    title: string;
 
-  @Column()
-  description: string;
+    @Column()
+    description: string;
 
-  @Column()
-  date: Date;
+    @Column()
+    date: Date;
 
-  @Column({ default: "pending" })
-  status: string;
+    @Column({ default: "pending" })
+    status: string;
 
-  @ManyToOne(() => Category, (category) => category.todos)
-  category: Category;
+    @ManyToOne(() => Category, (category) => category.todos, { nullable: true })
+    category: Category;
 
-  @ManyToOne(() => User, (user) => user.todos)
-  user: User;
+    @ManyToOne(() => User, (user) => user.todos)
+    user: User;
 
-  @CreateDateColumn()
-  createdAt: Date;
+    @CreateDateColumn()
+    createdAt: Date;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

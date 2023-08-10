@@ -9,44 +9,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Todo = void 0;
 const typeorm_1 = require("typeorm");
-const Todo_1 = require("./Todo");
-let User = class User extends typeorm_1.BaseEntity {
+const Category_1 = require("./Category");
+const User_1 = require("./User");
+let Todo = class Todo extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], User.prototype, "id", void 0);
+], Todo.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "name", void 0);
+], Todo.prototype, "title", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], User.prototype, "user", void 0);
+], Todo.prototype, "description", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
+    __metadata("design:type", Date)
+], Todo.prototype, "date", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)({ default: "pending" }),
     __metadata("design:type", String)
-], User.prototype, "notifToken", void 0);
+], Todo.prototype, "status", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Todo_1.Todo, (todo) => todo.user),
-    __metadata("design:type", Array)
-], User.prototype, "todos", void 0);
+    (0, typeorm_1.ManyToOne)(() => Category_1.Category, (category) => category.todos),
+    __metadata("design:type", Category_1.Category)
+], Todo.prototype, "category", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.todos),
+    __metadata("design:type", User_1.User)
+], Todo.prototype, "user", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
-], User.prototype, "createdAt", void 0);
+], Todo.prototype, "createdAt", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)(),
     __metadata("design:type", Date)
-], User.prototype, "updatedAt", void 0);
-User = __decorate([
+], Todo.prototype, "updatedAt", void 0);
+Todo = __decorate([
     (0, typeorm_1.Entity)()
-], User);
-exports.User = User;
+], Todo);
+exports.Todo = Todo;

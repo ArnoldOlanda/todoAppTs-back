@@ -16,15 +16,18 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const data_source_1 = require("./data-source");
-const todos_1 = __importDefault(require("./routes/todos"));
+const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
+const todos_routes_1 = __importDefault(require("./routes/todos.routes"));
+const category_routes_1 = __importDefault(require("./routes/category.routes"));
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || 4000;
         this.paths = {
             index: "/api",
-            todos: "/api/todos",
+            auth: "/api/auth",
             users: "/api/users",
+            todos: "/api/todos",
             categories: "/api/categories",
         };
         this.conectarDB();
@@ -47,13 +50,15 @@ class Server {
         this.app.use(express_1.default.json());
         //Public folder
         this.app.use(express_1.default.static("public"));
-        this.app.use((0, morgan_1.default)("short"));
+        this.app.use((0, morgan_1.default)("dev"));
     }
     routes() {
-        this.app.get(this.paths.index, (req, res) => {
-            res.json({ msg: "API connected" });
+        this.app.get(this.paths.index, (_req, res) => {
+            res.json({ msg: "SERVER ONLINE..." });
         });
-        this.app.use(this.paths.todos, todos_1.default);
+        this.app.use(this.paths.auth, auth_routes_1.default);
+        this.app.use(this.paths.todos, todos_routes_1.default);
+        this.app.use(this.paths.categories, category_routes_1.default);
     }
     listen() {
         this.app.listen(this.port, () => {
