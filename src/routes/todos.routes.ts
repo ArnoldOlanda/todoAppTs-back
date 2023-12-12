@@ -1,19 +1,14 @@
 import { Router } from "express";
 import { check } from "express-validator";
-import {
-    getTodos,
-    getTodosToday,
-    postTodo,
-    putCompleteTodo,
-    putTodo,
-    putUncompleteTodo,
-} from "../controllers/todo.controller";
+import { TodoController } from "../controllers/todo.controller";
 import { categoryIdExists, todoIdExists, userIdExists } from "../middlewares";
 
 import { validarCampos } from "../middlewares/validarCampos";
 import { validarJWT } from "../middlewares/validarJWT";
+import { TodoService } from "../services/todo.service";
 
 const router = Router();
+const todoController = new TodoController(new TodoService());
 
 router.get(
     "/:id",
@@ -23,7 +18,7 @@ router.get(
         check("id").custom(userIdExists),
         validarCampos,
     ],
-    getTodos
+    todoController.getTodos
 );
 
 router.get(
@@ -34,7 +29,7 @@ router.get(
         check("id").custom(userIdExists),
         validarCampos,
     ],
-    getTodosToday
+    todoController.getTodosToday
 );
 
 router.post(
@@ -43,14 +38,13 @@ router.post(
         // validarJWT,
         check("title", "Title is required").not().isEmpty(),
         check("date", "Date is required").not().isEmpty(),
-        check("description", "Description is required").not().isEmpty(),
         check("idUser", "User ID must be a number").isNumeric(),
         check("idCategory", "Category ID must be a number").isNumeric(),
         check("idUser").custom(userIdExists),
         check("idCategory").custom(categoryIdExists),
         validarCampos,
     ],
-    postTodo
+    todoController.postTodo
 );
 
 router.put(
@@ -61,10 +55,9 @@ router.put(
         check("id").custom(todoIdExists),
         check("title", "Title is required").not().isEmpty(),
         check("date", "Date is required").not().isEmpty(),
-        check("description", "Description is required").not().isEmpty(),
         validarCampos,
     ],
-    putTodo
+    todoController.putTodo
 );
 
 router.put(
@@ -75,7 +68,7 @@ router.put(
         check("id").custom(todoIdExists),
         validarCampos,
     ],
-    putCompleteTodo
+    todoController.putCompleteTodo
 ); //Complete a todo
 
 router.put(
@@ -86,7 +79,7 @@ router.put(
         check("id").custom(todoIdExists),
         validarCampos,
     ],
-    putUncompleteTodo
+    todoController.putUncompleteTodo
 ); //Complete a todo
 
 export default router;

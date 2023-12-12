@@ -19,9 +19,6 @@ export class Todo extends BaseEntity {
     title: string;
 
     @Column()
-    description: string;
-
-    @Column()
     date: Date;
 
     @Column({ default: "pending" })

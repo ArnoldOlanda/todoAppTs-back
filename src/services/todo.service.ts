@@ -23,6 +23,7 @@ export class TodoService {
         try {
             const todos = await Todo.createQueryBuilder("t")
                 .innerJoin("t.user", "u")
+                .innerJoinAndSelect("t.category", "c")
                 .where("date_trunc('day', date) = CURRENT_TIMESTAMP::date")
                 .andWhere("u.id= :id", { id })
                 .getMany();
@@ -35,7 +36,7 @@ export class TodoService {
     };
 
     public register = async (data: CreateTodoDto): Promise<Todo> => {
-        const { title, description, date, idUser, idCategory } = data;
+        const { title, date, idUser, idCategory } = data;
 
         try {
             const user = await User.findOneBy({ id: idUser });
@@ -49,7 +50,6 @@ export class TodoService {
 
             const todo = new Todo();
             todo.title = title;
-            todo.description = description;
             todo.date = date;
             todo.user = user;
             todo.category = category;
@@ -64,7 +64,7 @@ export class TodoService {
     };
 
     public update = async (id: number, todo: UpdateTodoDto): Promise<Todo> => {
-        const { date, description, title, idCategory } = todo;
+        const { date, title, idCategory } = todo;
         try {
             const todo = await Todo.findOneBy({ id });
             if (!todo) {
@@ -73,7 +73,6 @@ export class TodoService {
             const category = await Category.findOneBy({ id: idCategory });
 
             todo.title = title;
-            todo.description = description;
             todo.date = date;
             todo.category = category!;
 

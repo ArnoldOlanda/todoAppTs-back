@@ -9,14 +9,7 @@ import { AppDataSource } from "./data-source";
 import authRoutes from "./routes/auth.routes";
 import todosRoutes from "./routes/todos.routes";
 import categoriesRoutes from "./routes/category.routes";
-
-interface Paths {
-    index: string;
-    todos: string;
-    users: string;
-    categories: string;
-    auth: string;
-}
+import { Paths } from "./interfaces/paths.interface";
 
 class Server {
     private app: Application;
