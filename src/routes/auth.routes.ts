@@ -4,13 +4,15 @@ import {
     getRevalidateToken,
     postLogin,
     postRegister,
+    putNotificationToken,
 } from "../controllers/auth.controller";
 
 const router = Router();
 
 router.post("/login", postLogin);
 router.post("/register", postRegister);
-router.get("/resetPassword");
+router.get("/reset-password");
 router.get("/renew", validarJWT, getRevalidateToken);
+router.put("/notification-token/:id", putNotificationToken);
 
 export default router;

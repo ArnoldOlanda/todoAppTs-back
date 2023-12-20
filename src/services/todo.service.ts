@@ -1,7 +1,9 @@
+import { Message } from "firebase-admin/lib/messaging/messaging-api";
 import { CreateTodoDto } from "../dto/CreateTodo.dto";
 import { UpdateTodoDto } from "../dto/UpdateTodo.dto";
 import { Category, Todo, User } from "../entity";
 import { NotFoundError } from "../errors/NotFoundError";
+import { sendNotification } from "../helpers/sendNotification";
 export class TodoService {
     public listOfTodos = async (id: number): Promise<Todo[] | undefined> => {
         try {
@@ -36,7 +38,7 @@ export class TodoService {
     };
 
     public register = async (data: CreateTodoDto): Promise<Todo> => {
-        const { title, date, idUser, idCategory } = data;
+        const { title, date, idUser, idCategory, withNotification } = data;
 
         try {
             const user = await User.findOneBy({ id: idUser });
@@ -55,6 +57,35 @@ export class TodoService {
             todo.category = category;
 
             await todo.save();
+
+            const message: Message = {
+                notification: {
+                    body: todo.title,
+                    title: "Recordatorio",
+                },
+                data: {
+                    todo: todo.title,
+                    user: user.name,
+                },
+                apns: {
+                    payload: { aps: { "mutable-content": 1 } },
+                    // fcm_options: { image: 'image-url' },
+                },
+                token: user.notifToken,
+            };
+            if (withNotification) {
+                const currentDateInMiliseconds = new Date().getTime();
+                const miliseconds =
+                    new Date(date).getTime() - currentDateInMiliseconds;
+
+                // console.log(miliseconds / 1000);
+
+                if (miliseconds > 0) {
+                    setTimeout(() => {
+                        sendNotification(message);
+                    }, miliseconds);
+                }
+            }
 
             return todo;
         } catch (error) {

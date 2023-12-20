@@ -3,4 +3,5 @@ export class CreateTodoDto {
     date: Date;
     idUser: number;
     idCategory: number;
+    withNotification: boolean;
 }

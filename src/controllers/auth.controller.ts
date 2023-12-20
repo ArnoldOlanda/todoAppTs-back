@@ -35,6 +35,30 @@ export const postLogin = async (req: Request, res: Response) => {
     }
 };
 
+export const putNotificationToken = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { notificationToken } = req.body;
+
+        const { message } = await userService.setNotificationToken(
+            +id,
+            notificationToken
+        );
+
+        return res.json({ message });
+    } catch (error) {
+        if (error instanceof ValidationError) {
+            return res.status(error.codeStatus).json({
+                ok: false,
+                message: error.message,
+            });
+        }
+        return res
+            .status(500)
+            .json({ ok: false, message: "Hable con el administrador" });
+    }
+};
+
 export const postRegister = async (req: Request, res: Response) => {
     const { name, user, password } = req.body;
 

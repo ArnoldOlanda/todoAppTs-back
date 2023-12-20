@@ -61,4 +61,24 @@ export class UserService {
             throw error;
         }
     }
+
+    async setNotificationToken(
+        id: number,
+        notificationToken: string
+    ): Promise<{ message: string }> {
+        try {
+            const user = await User.findOneBy({ id });
+            if (!user) {
+                throw new ValidationError("User doesn´t exists", 404);
+            }
+
+            user.notifToken = notificationToken;
+
+            await user.save();
+
+            return { message: "Token actualizado" };
+        } catch (error) {
+            throw error;
+        }
+    }
 }
