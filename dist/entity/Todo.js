@@ -25,10 +25,6 @@ __decorate([
 ], Todo.prototype, "title", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Todo.prototype, "description", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
     __metadata("design:type", Date)
 ], Todo.prototype, "date", void 0);
 __decorate([
@@ -36,7 +32,7 @@ __decorate([
     __metadata("design:type", String)
 ], Todo.prototype, "status", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Category_1.Category, (category) => category.todos),
+    (0, typeorm_1.ManyToOne)(() => Category_1.Category, (category) => category.todos, { nullable: true }),
     __metadata("design:type", Category_1.Category)
 ], Todo.prototype, "category", void 0);
 __decorate([

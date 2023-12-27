@@ -6,10 +6,9 @@ const typeorm_1 = require("typeorm");
 const User_1 = require("./entity/User");
 const Category_1 = require("./entity/Category");
 const Todo_1 = require("./entity/Todo");
-console.log(process.env);
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "postgres",
-    port: 5432,
+    port: parseInt(`${process.env.DB_PORT}`) || 5432,
     username: `${process.env.DB_USER}`,
     host: `${process.env.DB_HOST}`,
     database: `${process.env.DB_NAME}`,

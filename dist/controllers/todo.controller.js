@@ -20,91 +20,125 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.putCompleteTodo = exports.putTodo = exports.postTodo = exports.getTodosToday = exports.getTodos = void 0;
-const todo_service_1 = require("../services/todo.service");
-const todoService = new todo_service_1.TodoService();
-const getTodos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    try {
-        const todos = yield todoService.listOfTodos(parseInt(id));
-        return res.json({ ok: true, todos });
-    }
-    catch (error) {
-        return res.status(500).json({
-            ok: false,
-            error: "Comunicate with the administrator",
+exports.TodoController = void 0;
+const NotFoundError_1 = require("../errors/NotFoundError");
+class TodoController {
+    constructor(todoService) {
+        this.todoService = todoService;
+        this.getTodos = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            try {
+                const todos = yield this.todoService.listOfTodos(parseInt(id));
+                return res.json({ ok: true, todos });
+            }
+            catch (error) {
+                return res.status(500).json({
+                    ok: false,
+                    error: "Comunicate with the administrator",
+                });
+            }
+        });
+        this.getTodosToday = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            try {
+                const todos = yield this.todoService.listOfTodosToday(parseInt(id));
+                return res.json({ ok: true, todos });
+            }
+            catch (error) {
+                return res.status(500).json({
+                    ok: false,
+                    error: "Comunicate with the administrator",
+                });
+            }
+        });
+        this.postTodo = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const data = __rest(req.body, []);
+            try {
+                const savedTodo = yield this.todoService.register(data);
+                return res.json(savedTodo);
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(500).json({
+                    ok: false,
+                    error: "Comunicate with the administrator",
+                });
+            }
+        });
+        this.putTodo = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const data = __rest(req.body, []);
+            try {
+                const updatedTodo = yield this.todoService.update(parseInt(id), data);
+                return res.json({
+                    ok: true,
+                    todo: updatedTodo,
+                });
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(500).json({
+                    ok: false,
+                    error: "Comunicate with the administrator",
+                });
+            }
+        });
+        this.putCompleteTodo = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            try {
+                const todoCompleted = yield this.todoService.complete(parseInt(id));
+                if (todoCompleted) {
+                    return res.json({
+                        ok: true,
+                        message: "Todo completed!",
+                        todo: todoCompleted,
+                    });
+                }
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(500).json({
+                    ok: false,
+                    error: "Contact the administrator",
+                });
+            }
+        });
+        this.putUncompleteTodo = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            try {
+                const todoCompleted = yield this.todoService.uncomplete(parseInt(id));
+                if (todoCompleted) {
+                    return res.json({
+                        ok: true,
+                        message: "Todo uncompleted!",
+                        todo: todoCompleted,
+                    });
+                }
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(500).json({
+                    ok: false,
+                    error: "Contact the administrator",
+                });
+            }
+        });
+        this.deleteTodo = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                const todoDeleted = yield this.todoService.delete(Number(id));
+                return res.json(todoDeleted);
+            }
+            catch (error) {
+                if (error instanceof NotFoundError_1.NotFoundError) {
+                    return res
+                        .status(error.codeStatus)
+                        .json({ name: error.message, message: error.message });
+                }
+                return res.status(500).json({ msg: "Internal server error" });
+            }
         });
     }
-});
-exports.getTodos = getTodos;
-const getTodosToday = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    try {
-        const todos = yield todoService.listOfTodosToday(parseInt(id));
-        return res.json({ ok: true, todos });
-    }
-    catch (error) {
-        return res.status(500).json({
-            ok: false,
-            error: "Comunicate with the administrator",
-        });
-    }
-});
-exports.getTodosToday = getTodosToday;
-const postTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = __rest(req.body, []);
-    try {
-        const savedTodo = yield todoService.register(data);
-        return res.json(savedTodo);
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            error: "Comunicate with the administrator",
-        });
-    }
-});
-exports.postTodo = postTodo;
-const putTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const data = __rest(req.body, []);
-    try {
-        const updatedTodo = yield todoService.update(parseInt(id), data);
-        return res.json({
-            ok: true,
-            todo: updatedTodo,
-        });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            error: "Comunicate with the administrator",
-        });
-    }
-});
-exports.putTodo = putTodo;
-const putCompleteTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    try {
-        const todoCompleted = yield todoService.complete(parseInt(id));
-        if (todoCompleted) {
-            return res.json({
-                ok: true,
-                message: "Todo completed!",
-                todo: todoCompleted,
-            });
-        }
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            error: "Contact the administrator",
-        });
-    }
-});
-exports.putCompleteTodo = putCompleteTodo;
-//TODO: Eliminar todo
+}
+exports.TodoController = TodoController;
 //TODO: Notificar la tarea a realizar segun el campo date proporcionado

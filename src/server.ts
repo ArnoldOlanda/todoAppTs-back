@@ -1,6 +1,3 @@
-import * as dotenv from "dotenv";
-dotenv.config();
-
 import express, { Application } from "express";
 import cors from "cors";
 import morgan from "morgan";
@@ -9,6 +6,7 @@ import { AppDataSource } from "./data-source";
 import authRoutes from "./routes/auth.routes";
 import todosRoutes from "./routes/todos.routes";
 import categoriesRoutes from "./routes/category.routes";
+import seedRouter from "./seed";
 import { Paths } from "./interfaces/paths.interface";
 
 class Server {
@@ -35,6 +33,7 @@ class Server {
     async conectarDB() {
         try {
             await AppDataSource.initialize();
+            console.log("Environment: ", process.env.NODE_ENV);
             console.log("Database conected... OK");
         } catch (error) {
             console.log(error);
@@ -57,6 +56,8 @@ class Server {
         this.app.get(this.paths.index, (_req, res) => {
             res.json({ msg: "SERVER ONLINE..." });
         });
+
+        this.app.use("/api", seedRouter);
 
         this.app.use(this.paths.auth, authRoutes);
         this.app.use(this.paths.todos, todosRoutes);

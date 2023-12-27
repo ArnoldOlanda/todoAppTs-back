@@ -19,6 +19,7 @@ const data_source_1 = require("./data-source");
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const todos_routes_1 = __importDefault(require("./routes/todos.routes"));
 const category_routes_1 = __importDefault(require("./routes/category.routes"));
+const seed_1 = __importDefault(require("./seed"));
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -38,6 +39,8 @@ class Server {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield data_source_1.AppDataSource.initialize();
+                console.log("Environment: ", process.env.NODE_ENV);
+                console.log("Database conected... OK");
             }
             catch (error) {
                 console.log(error);
@@ -56,6 +59,7 @@ class Server {
         this.app.get(this.paths.index, (_req, res) => {
             res.json({ msg: "SERVER ONLINE..." });
         });
+        this.app.use("/api", seed_1.default);
         this.app.use(this.paths.auth, auth_routes_1.default);
         this.app.use(this.paths.todos, todos_routes_1.default);
         this.app.use(this.paths.categories, category_routes_1.default);
@@ -63,6 +67,7 @@ class Server {
     listen() {
         this.app.listen(this.port, () => {
             console.log(`Server on line in the port: ${this.port}`);
+            //console.log(process.env);
         });
     }
 }

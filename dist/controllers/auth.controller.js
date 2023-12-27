@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRevalidateToken = exports.postRegister = exports.postLogin = void 0;
+exports.getRevalidateToken = exports.postRegister = exports.putNotificationToken = exports.postLogin = void 0;
 const generateJWT_1 = require("../helpers/generateJWT");
 const user_service_1 = require("../services/user.service");
 const ValidationError_1 = require("../errors/ValidationError");
@@ -37,6 +37,26 @@ const postLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.postLogin = postLogin;
+const putNotificationToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const { notificationToken } = req.body;
+        const { message } = yield userService.setNotificationToken(+id, notificationToken);
+        return res.json({ message });
+    }
+    catch (error) {
+        if (error instanceof ValidationError_1.ValidationError) {
+            return res.status(error.codeStatus).json({
+                ok: false,
+                message: error.message,
+            });
+        }
+        return res
+            .status(500)
+            .json({ ok: false, message: "Hable con el administrador" });
+    }
+});
+exports.putNotificationToken = putNotificationToken;
 const postRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, user, password } = req.body;
     try {

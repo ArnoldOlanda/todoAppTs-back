@@ -61,5 +61,21 @@ class UserService {
             }
         });
     }
+    setNotificationToken(id, notificationToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield entity_1.User.findOneBy({ id });
+                if (!user) {
+                    throw new ValidationError_1.ValidationError("User doesn´t exists", 404);
+                }
+                user.notifToken = notificationToken;
+                yield user.save();
+                return { message: "Token actualizado" };
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
 }
 exports.UserService = UserService;
